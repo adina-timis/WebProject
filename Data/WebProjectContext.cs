@@ -19,5 +19,7 @@ namespace WebProject.Data
         public DbSet<WebProject.Models.Personal> Personal { get; set; }
 
         public DbSet<WebProject.Models.Marca> Marca { get; set; }
+
+        public DbSet<WebProject.Models.Categorie> Categorie { get; set; }
     }
 }

@@ -11,7 +11,7 @@ using WebProject.Models;
 
 namespace WebProject.Pages.Servicii
 {
-    public class CreateModel : PageModel
+    public class CreateModel : ServiciuCategoriiPageModel
     {
         private readonly WebProject.Data.WebProjectContext _context;
 
@@ -25,25 +25,48 @@ namespace WebProject.Pages.Servicii
             ViewData["MarcaID"] = new SelectList(_context.Set<Marca>(), "ID", "MarcaNume");
             ViewData["PersonalID"] = new SelectList(_context.Set<Personal>(), "ID", "Nume");
             ViewData["PersonalID"] = new SelectList(_context.Set<Personal>(), "ID", "Prenume");
+
+            var serviciu = new Serviciu();
+            serviciu.ServiciuCategorii = new List<ServiciuCategorie>();
+            PopulateAssignedCategoryData(_context, serviciu);
+            var personalList = _context.Personal.Select(x => new
+            {
+                x.ID,
+                FullName = x.Nume + " " + x.Prenume
+            });
+            ViewData["PersonalID"] = new SelectList(personalList, "ID", "FullName");
+            ViewData["MarcaID"] = new SelectList(_context.Marca, "ID", "MarcaNume");
+
+
             return Page();
         }
 
         [BindProperty]
         public Serviciu Serviciu { get; set; }
-        
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string[] selectedCategories)
         {
-          if (!ModelState.IsValid)
+            var newServiciu = Serviciu;
+            if (selectedCategories != null)
             {
-                return Page();
+                newServiciu.ServiciuCategorii = new List<ServiciuCategorie>();
+                foreach (var cat in selectedCategories)
+                {
+                    var catToAdd = new ServiciuCategorie
+                    {
+                        CategorieID = int.Parse(cat)
+                    };
+                    newServiciu.ServiciuCategorii.Add(catToAdd);
+                }
             }
-
-            _context.Serviciu.Add(Serviciu);
+           
+            _context.Serviciu.Add(newServiciu);
             await _context.SaveChangesAsync();
-
             return RedirectToPage("./Index");
+            PopulateAssignedCategoryData(_context, newServiciu);
+            return Page();
         }
     }
 }

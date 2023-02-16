@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "/"
 @model WebProject.Pages.Servicii.IndexModel
 
 @{
@@ -28,11 +28,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.Serviciu[0].Marca.MarcaNume)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Serviciu[0].ServiciuCategorii)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Serviciu) {
+        @foreach (var item in Model.ServiciuD.Servicii) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nume)
@@ -50,6 +53,15 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Marca.MarcaNume)
                 </td>
+                <td>
+                    @{
+                        foreach (var category in item.ServiciuCategorii)
+                        {
+                            @category.Categorie.ID @: @category.Categorie.CategorieNume <br />
+                        }
+                    }
+                </td>
+
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |

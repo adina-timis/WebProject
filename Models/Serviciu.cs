@@ -26,5 +26,6 @@ namespace WebProject.Models
         public Personal? Personal { get; set; }  //navigation property
         public int? MarcaID { get; set; }
         public Marca? Marca { get; set; }  //navigation property
+        public ICollection<ServiciuCategorie>? ServiciuCategorii { get; set; }
     }
 }
