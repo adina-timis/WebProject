@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using WebProject.Data;
 using WebProject.Models;
+using WebProject.Models.ViewModels;
 
 namespace WebProject.Pages.Marci
 {
@@ -21,11 +22,23 @@ namespace WebProject.Pages.Marci
 
         public IList<Marca> Marca { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public MarcaIndexData MarcaData { get; set; }
+        public int MarcaID { get; set; }
+        public int ServiciuID { get; set; }
+        public async Task OnGetAsync(int? id, int? serviciuID)
         {
-            if (_context.Marca != null)
+            MarcaData = new MarcaIndexData();
+            MarcaData.Marci = await _context.Marca
+            .Include(i => i.Servicii)
+                .ThenInclude(c => c.Personal)
+            .OrderBy(i => i.MarcaNume)
+            .ToListAsync();
+            if (id != null)
             {
-                Marca = await _context.Marca.ToListAsync();
+                MarcaID = id.Value;
+                Marca marca = MarcaData.Marci
+                    .Where(i => i.ID == id.Value).Single();
+                MarcaData.Servicii = marca.Servicii;
             }
         }
     }

@@ -30,10 +30,10 @@ namespace WebProject.Pages.Servicii
         {
             ServiciuD = new ServiciuData();
 
-            // using System;
             NumeSort = String.IsNullOrEmpty(sortOrder) ? "nume_desc" : "";
             PersonalSort = String.IsNullOrEmpty(sortOrder) ? "personal_desc" : "";
-
+            CurrentFilter = searchString;
+            
             ServiciuD.Servicii = await _context.Serviciu
             .Include(b => b.Personal)
             .Include(b => b.Marca)
