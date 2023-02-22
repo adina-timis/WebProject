@@ -4,86 +4,87 @@
 @{
     ViewData["Title"] = "Index";
 }
+<body class="services-page">
+    <h1>Index</h1>
 
-<h1>Index</h1>
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+    <form asp-page="./Index" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Find by Book Title / Author Name:
+                <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+                <input type="submit" value="Search" class="btn btn-primary" /> |
+                <a asp-page="./Index">Back to full List</a>
+            </p>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-
-<form asp-page="./Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Find by Book Title / Author Name:
-            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
-            <input type="submit" value="Search" class="btn btn-primary" /> |
-            <a asp-page="./Index">Back to full List</a>
-        </p>
-    </div>
-</form>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.NumeSort">
+            <tr>
+                <th>
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.NumeSort">
                         @Html.DisplayNameFor(model => model.Serviciu[0].Nume)
-                </a>
-            </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.PersonalSort">
-                    @Html.DisplayNameFor(model => model.Serviciu[0].Personal)
-                </a>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Serviciu[0].Pret)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Serviciu[0].DataInfiintarii)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Serviciu[0].Marca.MarcaNume)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Serviciu[0].ServiciuCategorii)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.ServiciuD.Servicii) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nume)
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Personal.Nume)
-                    @Html.DisplayFor(modelItem => item.Personal.Prenume)
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pret)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataInfiintarii)
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Marca.MarcaNume)
-                </td>
-                <td>
-                    @{
-                        foreach (var category in item.ServiciuCategorii)
-                        {
-                            @category.Categorie.ID @: @category.Categorie.CategorieNume <br />
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.PersonalSort">
+                        @Html.DisplayNameFor(model => model.Serviciu[0].Personal)
+                    </a>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Serviciu[0].Pret)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Serviciu[0].DataInfiintarii)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Serviciu[0].Marca.MarcaNume)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Serviciu[0].ServiciuCategorii)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ServiciuD.Servicii)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nume)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Personal.Nume)
+                        @Html.DisplayFor(modelItem => item.Personal.Prenume)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Pret)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataInfiintarii)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Marca.MarcaNume)
+                    </td>
+                    
+                    <td>
+                        @{
+                            foreach (var category in item.ServiciuCategorii)
+                            {
+                                @category.Categorie.ID @: @category.Categorie.CategorieNume <br />
+                            }
                         }
-                    }
-                </td>
-
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>

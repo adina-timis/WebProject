@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +13,7 @@ using WebProject.Models;
 
 namespace WebProject.Pages.Servicii
 {
+    [Authorize(Roles = "Admin")]
     public class CreateModel : ServiciuCategoriiPageModel
     {
         private readonly WebProject.Data.WebProjectContext _context;
@@ -25,7 +28,6 @@ namespace WebProject.Pages.Servicii
             ViewData["MarcaID"] = new SelectList(_context.Set<Marca>(), "ID", "MarcaNume");
             ViewData["PersonalID"] = new SelectList(_context.Set<Personal>(), "ID", "Nume");
             ViewData["PersonalID"] = new SelectList(_context.Set<Personal>(), "ID", "Prenume");
-
             var serviciu = new Serviciu();
             serviciu.ServiciuCategorii = new List<ServiciuCategorie>();
             PopulateAssignedCategoryData(_context, serviciu);
@@ -36,14 +38,12 @@ namespace WebProject.Pages.Servicii
             });
             ViewData["PersonalID"] = new SelectList(personalList, "ID", "FullName");
             ViewData["MarcaID"] = new SelectList(_context.Marca, "ID", "MarcaNume");
-
-
+            return Page();
             return Page();
         }
 
         [BindProperty]
         public Serviciu Serviciu { get; set; }
-
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync(string[] selectedCategories)
@@ -61,7 +61,12 @@ namespace WebProject.Pages.Servicii
                     newServiciu.ServiciuCategorii.Add(catToAdd);
                 }
             }
-           
+            //if (await TryUpdateModelAsync<Book>(
+            //newBook,
+            //"Book",
+            //i => i.Title, i => i.Author,
+            //i => i.Price, i => i.PublishingDate, i => i.PublisherID))
+            //}
             _context.Serviciu.Add(newServiciu);
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +14,7 @@ using WebProject.Models;
 
 namespace WebProject.Pages.Servicii
 {
+    [Authorize(Roles = "Admin")]
     public class EditModel : ServiciuCategoriiPageModel
     {
         private readonly WebProject.Data.WebProjectContext _context;
@@ -30,26 +34,29 @@ namespace WebProject.Pages.Servicii
                 return NotFound();
             }
 
-            var serviciu =  await _context.Serviciu.FirstOrDefaultAsync(m => m.ID == id);
+            var serviciu = await _context.Serviciu.FirstOrDefaultAsync(m => m.ID == id);
             Serviciu = await _context.Serviciu
                 .Include(b => b.Marca)
                 .Include(b => b.ServiciuCategorii).ThenInclude(b => b.Categorie)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
 
+
+
             if (serviciu == null)
             {
                 return NotFound();
             }
             PopulateAssignedCategoryData(_context, Serviciu);
-
             var authorList = _context.Personal.Select(x => new
             {
                 x.ID,
                 FullName = x.Nume + " " + x.Prenume
             });
-
+            ViewData["PersonalID"] = new SelectList(authorList, "ID", "FullName");
+            ViewData["MarcaID"] = new SelectList(_context.Marca, "ID", "MarcaNume");
             Serviciu = serviciu;
+
             ViewData["MarcaID"] = new SelectList(_context.Set<Marca>(), "ID", "MarcaNume");
             ViewData["PersonalID"] = new SelectList(_context.Set<Personal>(), "ID", "PersonalNume");
             return Page();
@@ -57,6 +64,7 @@ namespace WebProject.Pages.Servicii
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
+
         public async Task<IActionResult> OnPostAsync(int? id, string[] selectedCategories)
         {
             if (id == null)

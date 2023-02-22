@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using WebProject.Data;
 using WebProject.Models;
@@ -19,21 +20,23 @@ namespace WebProject.Pages.Servicii
             _context = context;
         }
 
-        public IList<Serviciu> Serviciu { get;set; } = default!;
+        public IList<Serviciu> Serviciu { get; set; } = default!;
+
         public ServiciuData ServiciuD { get; set; }
         public int ServiciuID { get; set; }
         public int CategorieID { get; set; }
         public string NumeSort { get; set; }
         public string PersonalSort { get; set; }
         public string CurrentFilter { get; set; }
+
         public async Task OnGetAsync(int? id, int? categorieID, string sortOrder, string searchString)
         {
             ServiciuD = new ServiciuData();
 
+            // using System;
             NumeSort = String.IsNullOrEmpty(sortOrder) ? "nume_desc" : "";
             PersonalSort = String.IsNullOrEmpty(sortOrder) ? "personal_desc" : "";
-            CurrentFilter = searchString;
-            
+
             ServiciuD.Servicii = await _context.Serviciu
             .Include(b => b.Personal)
             .Include(b => b.Marca)
@@ -72,3 +75,4 @@ namespace WebProject.Pages.Servicii
         }
     }
 }
+
